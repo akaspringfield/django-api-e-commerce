@@ -1,6 +1,7 @@
 from .models import User
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password, check_password
+from django.utils import timezone
 from secrets import token_hex
 import datetime
 
@@ -22,7 +23,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 
         # Create a token
         validated_data['token'] = token_hex(30)
-        validated_data['token_expires_at'] = datetime.datetime.now() + datetime.timedelta(days=7)
+        validated_data['token_expires_at'] = timezone.now() + datetime.timedelta(days=7)
 
         return super().create(validated_data)
 
@@ -45,10 +46,6 @@ class UserSignInSerializer(serializers.ModelSerializer):
         #this will return the User object filter by email id 
         #and we are taking it to the user variable
         user = User.objects.filter(email=validated_data['email'])
-        email = User.objects.get(email=validated_data['email'])
-
-        print (">>>>>>>>>>> ")
-        print (email.username)
 
         # Check the password
         if len(user) > 0 and check_password(validated_data['password'], user[0].password):
@@ -59,7 +56,7 @@ class UserSignInSerializer(serializers.ModelSerializer):
             # Token
             user[0].token = token_hex(30)
             # Token expires after 7 days
-            user[0].token_expires_at = datetime.datetime.now() + datetime.timedelta(days=7)
+            user[0].token_expires_at = timezone.now() + datetime.timedelta(days=7)
             user[0].save()
 
             # Return user information

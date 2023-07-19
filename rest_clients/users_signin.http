@@ -1,6 +1,6 @@
 # To use the http client, install "REST Client" extension of Visual Studio Code.
 # To send the request and get the result, click the 'Send Request' 
-POST http://127.0.0.1:8000/api/us/signin/ HTTP/1.1
+POST http://127.0.0.1:8002/api/us/signin/ HTTP/1.1
 content-type: application/json
 Authorization: 12d9c15cf031e4821fa98d6b1be0f52321a3a2af00f0f812448a8041f528
 

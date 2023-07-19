@@ -15,11 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 urlpatterns = [
+    path('', TemplateView.as_view(template_name='index.html'), name='storefront'),
+    path('v1/admin/', TemplateView.as_view(template_name='admin.html'), name='admin_portal'),
     path('admin/', admin.site.urls),
     path('api/us/', include('user.urls')),
     path('api/ca/', include('cart.urls')),
     path('api/it/', include('items.urls')),
+    path('api/or/', include('order.urls')),
+    path('api/ad/', include('adminpanel.urls')),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'frontend' / 'static')
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

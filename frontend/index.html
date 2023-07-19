@@ -1,0 +1,276 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThreadCart Storefront</title>
+  <link rel="stylesheet" href="{% static 'css/storefront.css' %}?v=threadcart-1">
+</head>
+<body>
+  <header class="site-header">
+    <div class="main-header">
+      <a class="brand" href="#productsTitle" aria-label="ThreadCart home">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <strong>THREADCART</strong>
+      </a>
+
+      <nav class="primary-nav" aria-label="Product categories">
+        <button class="category-link active" type="button" data-category="all">All</button>
+        <button class="category-link" type="button" data-category="clothing">Clothing</button>
+        <button class="category-link" type="button" data-category="footwear">Footwear</button>
+        <button class="category-link" type="button" data-category="accessories">Accessories</button>
+        <button class="category-link" type="button" data-category="bags">Bags</button>
+      </nav>
+
+      <div class="header-actions">
+        <label class="search-box">
+          <span>Search</span>
+          <input id="itemSearch" type="search" placeholder="Search for products">
+        </label>
+        <button id="openAuthBtn" class="header-link" type="button">Sign In</button>
+        <button id="openFeedbackBtn" class="header-link" type="button">Feedback</button>
+        <button id="openOrdersBtn" class="header-link" type="button">Orders</button>
+        <button id="signOutBtn" class="header-link" type="button" hidden>Sign out</button>
+        <button id="openCartBtn" class="bag-button" type="button" aria-label="Open shopping bag">
+          <span class="bag-icon" aria-hidden="true"></span>
+          <span id="cartCount" class="bag-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <span id="sessionLabel">Guest</span>
+      <span>Free shipping on orders above $50</span>
+      <span>Easy returns</span>
+    </div>
+  </header>
+
+  <section class="listing-hero" aria-labelledby="heroTitle">
+    <div>
+      <p>Official store edit</p>
+      <h1 id="heroTitle">Products made easy to browse.</h1>
+      <span>Explore categories, search quickly, and add products to your bag when you are ready.</span>
+    </div>
+  </section>
+
+  <main class="catalog-shell">
+    <aside class="filter-panel" aria-label="Catalog filters">
+      <div class="filter-block">
+        <h2>Categories</h2>
+        <button class="filter-choice active" type="button" data-category="all">All Products</button>
+        <button class="filter-choice" type="button" data-category="clothing">Clothing</button>
+        <button class="filter-choice" type="button" data-category="footwear">Footwear</button>
+        <button class="filter-choice" type="button" data-category="accessories">Accessories</button>
+        <button class="filter-choice" type="button" data-category="bags">Bags</button>
+      </div>
+    </aside>
+
+    <section class="products-panel" aria-labelledby="productsTitle">
+      <div class="catalog-head">
+        <div>
+          <p class="section-kicker">Explore</p>
+          <h2 id="productsTitle">All Products</h2>
+          <span id="resultCount">Loading products</span>
+        </div>
+        <div class="catalog-actions">
+          <label class="sort-select-label">Sort
+            <select id="sortSelect">
+              <option value="featured">Featured</option>
+              <option value="low">Price: Low to High</option>
+              <option value="high">Price: High to Low</option>
+              <option value="new">Newest First</option>
+            </select>
+          </label>
+          <button id="refreshItemsBtn" class="icon-refresh" type="button" aria-label="Refresh products"></button>
+        </div>
+      </div>
+
+      <div class="quick-categories" aria-label="Quick categories">
+        <button class="category-chip active" type="button" data-category="all">All</button>
+        <button class="category-chip" type="button" data-category="clothing">Clothing</button>
+        <button class="category-chip" type="button" data-category="footwear">Footwear</button>
+        <button class="category-chip" type="button" data-category="accessories">Accessories</button>
+        <button class="category-chip" type="button" data-category="bags">Bags</button>
+      </div>
+
+      <div id="itemsGrid" class="items-grid"></div>
+    </section>
+  </main>
+
+  <div id="authModal" class="modal-shell hidden" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <section class="modal-card auth-card">
+      <button class="close-button" type="button" data-close-modal="authModal">Close</button>
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">Account</p>
+          <h2 id="authTitle">Sign in to continue</h2>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Account forms">
+          <button id="signinTab" class="tab active" type="button">Sign in</button>
+          <button id="signupTab" class="tab" type="button">Sign up</button>
+        </div>
+      </div>
+
+      <form id="signinForm" class="form-stack">
+        <label>Email
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="primary" type="submit">Sign in</button>
+      </form>
+
+      <form id="signupForm" class="form-stack hidden">
+        <label>Username
+          <input name="username" type="text" autocomplete="username" required>
+        </label>
+        <label>Email
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="new-password" required>
+        </label>
+        <button class="primary" type="submit">Create account</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="cartDrawer" class="drawer-shell hidden" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+    <aside class="drawer-card">
+      <button class="close-button" type="button" data-close-modal="cartDrawer">Close</button>
+      <div class="panel-heading">
+        <h2 id="cartTitle">Shopping Bag</h2>
+        <button id="refreshCartBtn" class="outline-button" type="button">Reload</button>
+      </div>
+
+      <div class="checkout-steps" aria-label="Checkout steps">
+        <button class="checkout-step active" type="button" data-checkout-step="cart">
+          <span>1</span> Cart
+        </button>
+        <button class="checkout-step" type="button" data-checkout-step="address">
+          <span>2</span> Address
+        </button>
+        <button class="checkout-step" type="button" data-checkout-step="payment">
+          <span>3</span> Payment
+        </button>
+      </div>
+
+      <form id="checkoutForm" class="form-stack checkout-form">
+        <section class="checkout-pane active" data-checkout-pane="cart">
+          <h3>Review cart</h3>
+          <div id="cartList" class="cart-list"></div>
+          <div class="total-row">
+            <span>Total</span>
+            <strong id="cartTotal">$0.00</strong>
+          </div>
+          <button class="primary checkout-next" type="button" data-next-step="address">Continue to address</button>
+        </section>
+
+        <section class="checkout-pane" data-checkout-pane="address">
+          <h3>Delivery address</h3>
+          <label>Full name
+            <input name="full_name" type="text" autocomplete="name" required>
+          </label>
+          <label>Address line 1
+            <input name="address_line1" type="text" autocomplete="address-line1" required>
+          </label>
+          <label>Address line 2
+            <input name="address_line2" type="text" autocomplete="address-line2">
+          </label>
+          <div class="field-row">
+            <label>City
+              <input name="city" type="text" autocomplete="address-level2" required>
+            </label>
+            <label>State
+              <input name="state" type="text" autocomplete="address-level1" required>
+            </label>
+          </div>
+          <div class="field-row">
+            <label>Postal code
+              <input name="postal_code" type="text" autocomplete="postal-code" required>
+            </label>
+            <label>Country
+              <input name="country" type="text" autocomplete="country-name" required>
+            </label>
+          </div>
+          <label>Telephone
+            <input name="telephone" type="tel" autocomplete="tel" required>
+          </label>
+          <div class="checkout-actions">
+            <button class="outline-button" type="button" data-next-step="cart">Back</button>
+            <button class="primary checkout-next" type="button" data-next-step="payment">Continue to payment</button>
+          </div>
+        </section>
+
+        <section class="checkout-pane" data-checkout-pane="payment">
+          <h3>Payment</h3>
+          <div class="payment-options">
+            <label class="payment-option">
+              <input name="payment_method" type="radio" value="cod" checked>
+              <span>
+                <strong>Cash on delivery</strong>
+                <small>Pay when your order arrives.</small>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input name="payment_method" type="radio" value="card">
+              <span>
+                <strong>Card payment</strong>
+                <small>Demo option for now.</small>
+              </span>
+            </label>
+          </div>
+          <div class="payment-summary">
+            <span>Amount to pay</span>
+            <strong id="paymentTotal">$0.00</strong>
+          </div>
+          <div class="checkout-actions">
+            <button class="outline-button" type="button" data-next-step="address">Back</button>
+            <button class="primary" type="submit">Place order</button>
+          </div>
+        </section>
+      </form>
+    </aside>
+  </div>
+
+  <div id="ordersDrawer" class="drawer-shell hidden" role="dialog" aria-modal="true" aria-labelledby="ordersTitle">
+    <aside class="drawer-card compact-drawer">
+      <button class="close-button" type="button" data-close-modal="ordersDrawer">Close</button>
+      <div class="panel-heading">
+        <h2 id="ordersTitle">Orders</h2>
+        <button id="refreshOrdersBtn" class="outline-button" type="button">Reload</button>
+      </div>
+      <div id="ordersList" class="orders-list"></div>
+    </aside>
+  </div>
+
+  <div id="feedbackModal" class="modal-shell hidden" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle">
+    <section class="modal-card">
+      <button class="close-button" type="button" data-close-modal="feedbackModal">Close</button>
+      <div class="panel-heading">
+        <div>
+          <p class="section-kicker">Feedback</p>
+          <h2 id="feedbackTitle">Tell us what to improve</h2>
+        </div>
+      </div>
+      <form id="feedbackForm" class="form-stack">
+        <label>Name
+          <input name="name" type="text" autocomplete="name">
+        </label>
+        <label>Email
+          <input name="email" type="email" autocomplete="email">
+        </label>
+        <label>Message
+          <input name="message" type="text" required>
+        </label>
+        <button class="primary" type="submit">Send feedback</button>
+      </form>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="{% static 'js/storefront.js' %}?v=threadcart-1"></script>
+</body>
+</html>

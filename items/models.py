@@ -26,7 +26,7 @@ class Items(models.Model):
         'Price', blank=False, null=False, max_digits=11, decimal_places=2
     )
     image = models.ImageField(
-        'Image', upload_to='media/images/', blank=False, null=False
+        'Image', upload_to='media/images/', blank=True, null=True
     )
     # image = CloudinaryField(
     #     'Image', blank=False, null=False

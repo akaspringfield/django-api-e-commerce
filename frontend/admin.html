@@ -1,0 +1,97 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ThreadCart Admin</title>
+  <link rel="stylesheet" href="{% static 'css/admin.css' %}?v=admin-1">
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="admin-hero">
+      <div>
+        <p>ThreadCart Admin</p>
+        <h1>Store control panel</h1>
+        <span>Add products, review orders, read feedback, and generate simple bills.</span>
+      </div>
+      <a href="/">Back to store</a>
+    </section>
+
+    <section class="admin-card" id="adminLoginPanel">
+      <div class="section-heading">
+        <p>Secure access</p>
+        <h2>Admin login</h2>
+      </div>
+      <form id="adminLoginForm" class="form-stack">
+        <label>Username
+          <input name="username" type="text" autocomplete="username" required>
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="primary" type="submit">Login</button>
+      </form>
+    </section>
+
+    <section id="adminDashboard" class="admin-grid hidden">
+      <article class="admin-card">
+        <div class="section-heading">
+          <p>Catalog</p>
+          <h2>Add product</h2>
+        </div>
+        <form id="adminItemForm" class="form-stack">
+          <label>Name
+            <input name="name" type="text" required>
+          </label>
+          <label>Description
+            <input name="description" type="text">
+          </label>
+          <div class="field-row">
+            <label>Price
+              <input name="price" type="number" min="0" step="0.01" required>
+            </label>
+            <label>Status
+              <input name="status" type="text" value="active" required>
+            </label>
+          </div>
+          <button class="primary" type="submit">Add product</button>
+        </form>
+      </article>
+
+      <article class="admin-card">
+        <div class="section-heading with-action">
+          <div>
+            <p>Sales</p>
+            <h2>Orders</h2>
+          </div>
+          <button id="adminLoadOrdersBtn" class="secondary" type="button">Load</button>
+        </div>
+        <div id="adminOrdersList" class="admin-list"></div>
+      </article>
+
+      <article class="admin-card">
+        <div class="section-heading with-action">
+          <div>
+            <p>Customers</p>
+            <h2>Feedback</h2>
+          </div>
+          <button id="adminLoadFeedbackBtn" class="secondary" type="button">Load</button>
+        </div>
+        <div id="adminFeedbackList" class="admin-list"></div>
+      </article>
+
+      <article class="admin-card bill-card">
+        <div class="section-heading">
+          <p>Billing</p>
+          <h2>Generated bill</h2>
+        </div>
+        <pre id="billOutput" class="bill-output">Select an order and generate a bill.</pre>
+      </article>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="{% static 'js/admin.js' %}?v=admin-1"></script>
+</body>
+</html>

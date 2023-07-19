@@ -7,11 +7,11 @@ class Cart(models.Model):
     class Meta(object):
         db_table = 'cart'
 
-    name = models.ForeignKey(
-        User, on_delete=models.CASCADE, db_index=True
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, db_index=True, related_name='cart_items'
     )
-    itemname = models.ForeignKey(
-        Items, on_delete=models.CASCADE, db_index=True
+    item = models.ForeignKey(
+        Items, on_delete=models.CASCADE, db_index=True, related_name='cart_rows'
     )
     quantity = models.IntegerField(
         'Quantity', blank=False, null=False, db_index=True

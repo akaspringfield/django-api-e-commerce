@@ -2,7 +2,6 @@
 
 from rest_framework import generics
 
-from user.models import User
 from .serializers import CartListSerializer
 from .models import Cart
 from user.mixinx import CustomLoginRequiredMixin
@@ -23,7 +22,30 @@ class CartAdd(CustomLoginRequiredMixin, generics.CreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartListSerializer
 
-    #post request
-    def post(self, request, *args, **kwargs):
-        request.data['username'] = request.login_user.id
-        return self.create(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        existing = Cart.objects.filter(user=self.request.login_user, item=serializer.validated_data['item']).first()
+        if existing:
+            existing.quantity += serializer.validated_data['quantity']
+            existing.save()
+            serializer.instance = existing
+            return
+
+        serializer.save(user=self.request.login_user)
+
+
+class CartUpdate(CustomLoginRequiredMixin, generics.UpdateAPIView):
+    serializer_class = CartListSerializer
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.login_user)
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
+
+
+class CartDelete(CustomLoginRequiredMixin, generics.DestroyAPIView):
+    serializer_class = CartListSerializer
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.login_user)

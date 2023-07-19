@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(db_index=True, max_length=14, verbose_name='Name')),
                 ('description', models.CharField(blank=True, db_index=True, max_length=200, null=True, verbose_name='Description')),
                 ('price', models.DecimalField(decimal_places=2, max_digits=11, verbose_name='Price')),
-                ('image', models.ImageField(upload_to='media/images/', verbose_name='Image')),
+                ('image', models.ImageField(blank=True, null=True, upload_to='media/images/', verbose_name='Image')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='Created At')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='Updated At')),
             ],
